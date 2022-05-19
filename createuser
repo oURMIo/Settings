@@ -1,0 +1,18 @@
+#!/bin/bash
+
+echo "//////////////////////////////////"
+echo "////////// KEY = g1234d //////////"
+echo "//////////////////////////////////"
+
+cd /etc/openvpn/easy-rsa/
+sudo ./easyrsa build-client-full $1 nopass
+
+mkdir /etc/openvpn/clients/$1
+cd /etc/openvpn/clients/$1
+
+cp /etc/openvpn/easy-rsa/pki/ca.crt /etc/openvpn/clients/$1/
+cp /etc/openvpn/easy-rsa/pki/ta.key /etc/openvpn/clients/$1/
+cp /etc/openvpn/easy-rsa/pki/issued/$1.crt /etc/openvpn/clients/$1/
+cp /etc/openvpn/easy-rsa/pki/private/$1.key /etc/openvpn/clients/$1/
+
+cp /etc/openvpn/clients/example.ovpn /etc/openvpn/clients/$1/$1.ovpn
