@@ -1,0 +1,68 @@
+[user]
+	email = $email
+	name = $name
+[color]
+	diff = auto
+	status = auto
+	branch = auto
+[core]
+	autocrlf = input
+	excludesfile=$path
+	trustctime = false
+[alias]
+	gitcommit="!f() { git add . && git commit -m \"$1\" && git push; }; f"
+    fs=flow feature start
+    mt=mergetool
+    ff=flow feature finish
+	gr=log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset:%an' --abbrev-commit --date=relative --all --since="yesterday"
+	gr=log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset:%an' --abbrev-commit --date=relative  
+	grall=log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset:%an' --abbrev-commit --date=relative --all 
+	gralt=log --date=iso --pretty=format:\"%h %ad %an %s\" --graph --topo-order --all 
+	day=log --stat --oneline --since="yesterday"
+	#create patch from git local repository for the given svn revision
+	svnp= ! sh -c 'git svnshow $1 > $1.patch' -
+	#show commit from git local repository for the given svn revision
+	svnshow = ! sh -c 'git log --grep="git-svn-id:.*$1" | grep commit | sed s/commit\\ //g | xargs -i{} git show {}' -
+	svna = ! sh -c 'git log --grep="git-svn-id:.*$1" | grep commit | sed s/commit\\ //g | xargs -i{} git show {}' -
+	#g = ! sh -c 'git log --grep $1  ' -
+	g = ! sh -c 'git log --grep $1 | grep commit | sed s/commit\\ //g | xargs -i{} git log -b -p  {}' -
+	o = log --oneline
+	srb= !sh -c 'git stash && git rebase master && git stash pop' -
+	sup = !sh -c 'git stash && git up && git stash pop' -
+	sdc = !sh -c 'git stash && git svn dcommit && git stash pop' -
+    up = svn rebase
+    ci = commit -a 
+    cim = commit -a -m 
+    ca = commit -a 
+    dci = !sh -c 'git commit -a -m \"$1\" && git svn dcommit' -
+    co = checkout
+    st = status
+    s = status
+    df = diff -b 
+    d = diff -b
+    stat = status
+    br = branch
+    b = branch
+    list=branch
+    ls=branch
+    l=branch
+    lo=log --oneline
+    switch=checkout
+    sw=checkout
+    lo=log --oneline --decorate
+	check=!sh -c 'git name-rev --name-only  \"$1\" ' - 
+    ch=!sh -c 'xclip -selection clipboard -o | xargs -i{} git name-rev {}' - 
+    brch=!sh -c 'xclip -selection clipboard -o | xargs -i{} git branch --contains {}' - 
+    brcheck=!sh -c 'git branch --contains \"$1\"' - 
+    find-merge = "!sh -c 'commit=$0 && branch=${1:-HEAD} && (git rev-list $commit..$branch --ancestry-path | cat -n; git rev-list $commit..$branch --first-parent | cat -n) | sort -k2 | uniq -f1 -d | sort -n | tail -1 | cut -f2'"
+    show-merge = "!sh -c 'merge=$(git find-merge $0 $1) && [ -n \"$merge\" ] && git show $merge'"
+[apply]
+	whitespace = nowarn
+[merge]
+	tool = kdiff3
+[diff]
+	renamelimit = 2048
+[rerere]
+	enabled =false 
+[mergetool]
+	trustExitCode = true
